@@ -1,0 +1,8 @@
+* ox-gemini
+
+This adds support for exporting org files in gemini format.
+
+Read more about gemini here: https://gemini.circumlunar.space/
+Read more about org-mode here: https://orgmode.org/
+
+This software is licensed under GPLv3.
