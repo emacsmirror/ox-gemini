@@ -52,7 +52,13 @@
 (defun org-gemini--describe-links (links width info)
   (mapconcat
    (lambda (link)
-     (let* ((path (org-element-property :raw-link link))
+     (let* ((raw-path (org-element-property :raw-link link))
+            (link-type (org-element-property :type link))
+            (is-org-file-link (and (string= "file" link-type)
+                                   (string= ".org" (downcase (file-name-extension raw-path ".")))))
+            (path (if is-org-file-link
+                      (concat (file-name-sans-extension (org-element-property :path link)) ".gmi")
+                    raw-path))
 	    (desc (org-element-contents link))
 	    (anchor (org-export-data
 		     (or desc (org-element-property :raw-link link))
