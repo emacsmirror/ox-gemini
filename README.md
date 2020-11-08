@@ -1,4 +1,4 @@
-* ox-gemini
+# ox-gemini
 
 This adds support for exporting org files in gemini format. Many things in here were taken from the ascii exporter, from which this one derives.
 
