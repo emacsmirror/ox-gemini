@@ -24,6 +24,7 @@
 		     (link . org-gemini-link)
 		     (section . org-gemini-section)
 		     (src-block . org-gemini-code-block)
+                     (item . org-gemini-item)
 		     (template . org-gemini-template)
 		     )
   )
@@ -35,6 +36,9 @@
 
 (defun org-gemini-identity (input contents info)
   "this is a test")
+
+(defun org-gemini-item (input contents info)
+  (format "* %s" contents))
 
 (defun org-gemini-code-inline (input contents info)
   ;; there's a bug here where there's a trailing space in the ``
