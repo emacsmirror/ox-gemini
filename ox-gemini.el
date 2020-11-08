@@ -184,4 +184,16 @@ holding export options."
       async subtreep visible-only body-only ext-plist)))
 
 
+(defun org-gemini-publish-to-gemini (plist filename pub-dir)
+  "Publish an org file to a gemini file
+
+FILENAME is the filename of the Org file to be published.  PLIST
+is the property list for the given project.  PUB-DIR is the
+publishing directory.
+
+Return output file name."
+  (org-publish-org-to
+   'gemini filename ".gmi" plist pub-dir))
+
+
 (provide 'ox-gemini)
