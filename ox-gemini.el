@@ -20,37 +20,11 @@
 	))
   :translate-alist '(
 		     (code . org-gemini-code-inline) 
-		     ;; (export-block . org-gemini-identity)
-
-		     ;; (center-block . org-gemini-identity)
-		     ;; (code . org-gemini-identity)
-		     ;; (drawer . org-gemini-identity)
-		     ;; (dynamic-block . org-gemini-identity)
-		     ;; (example-block . org-gemini-identity)
-		     ;; (export-block . org-gemini-identity)
-		     ;; (fixed-width . org-gemini-identity)
 		     (headline . org-gemini-headline)
-		     ;; (horizontal-rule . org-gemini-identity)
-		     ;; (inline-src-block . org-gemini-code-inline)
-		     ;; (inlinetask . org-gemini-identity)
-		     ;; (inner-template . org-gemini-identity)
-		     ;; (italic . org-gemini-identity)
-		     ;; (item . org-gemini-identity)
-		     ;; (keyword . org-gemini-identity)
-		     ;; (line-break . org-gemini-identity)
 		     (link . org-gemini-link)
-		     ;; (node-property . org-gemini-identity)
-		     ;; (paragraph . org-gemini-identity)
-		     ;; (plain-list . org-gemini-identity)
-		     ;; (plain-text . org-gemini-identity)
-		     ;; (property-drawer . org-gemini-identity)
-		     ;; (quote-block . org-gemini-identity)
 		     (section . org-gemini-section)
-		     ;; (special-block . org-gemini-identity)
 		     (src-block . org-gemini-code-block)
-		     ;; (table . org-gemini-identity)
 		     (template . org-gemini-template)
-		     ;; (verbatim . org-gemini-identity 
 		     )
   )
 
@@ -90,7 +64,7 @@
 
 
 (defun org-gemini-section (section contents info)
-  "Transcode a SECTION element from Org to ASCII.
+  "Transcode a SECTION element from Org to GEMINI.
 CONTENTS is the contents of the section.  INFO is a plist holding
 contextual information."
   (let ((links
@@ -124,7 +98,7 @@ contextual information."
 
 
 (defun org-gemini-headline (headline contents info)
-  "Transcode a HEADLINE element from Org to ASCII.
+  "Transcode a HEADLINE element from Org to GEMINI.
 CONTENTS holds the contents of the headline.  INFO is a plist
 holding contextual information."
   ;; Don't export footnote section, which will be handled at the end
@@ -176,7 +150,7 @@ holding contextual information."
 	(concat title "\n" pre-blanks body)))))
 
 (defun org-gemini-template (contents info)
-  "Return complete document string after ASCII conversion.
+  "Return complete document string after GEMINI conversion.
 CONTENTS is the transcoded contents string.  INFO is a plist
 holding export options."
   (let ((global-margin (plist-get info :ascii-global-margin)))
