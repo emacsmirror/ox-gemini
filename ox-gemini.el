@@ -112,7 +112,6 @@ contextual information."
 	  (plist-get info :ascii-inner-margin))))))
 
 (defun org-gemini--build-title
-    "Simple title."
     (element info text-width &optional underline notags toc)
   (let ((number (org-element-property :level element))
 	(text
