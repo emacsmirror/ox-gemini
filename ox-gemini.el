@@ -7,6 +7,8 @@
 ;; TODO:
 ;; Sublists aren't supported in gemini
 ;; There's a trailing space after inline code samples
+;; If you don't have a title, it leaves a blank # in the gmi
+;; If you link a file to an absolute path, the links break
 
 (org-export-define-derived-backend 'gemini 'ascii
   :menu-entry
