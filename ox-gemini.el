@@ -1,3 +1,21 @@
+;;; ox-gemini.el --- Output gemini formatted documents from org-mode  -*- lexical-binding: t; -*-
+
+
+;; Author: Justin Abrahms <justin@abrah.ms>
+;; URL: https://git.sr.ht/~abrahms/ox-gemini
+;; Keywords: lisp gemini
+;; Version: 0
+;; Package-Requires: ((emacs "26.1"))
+
+
+;;; Commentary:
+;;
+;; There's a web-alternative that's similar to the gopher protocol
+;; named 'gemini'.  You can find more about it at
+;; https://gemini.circumlunar.space/ This package serves as an
+;; org-mode export backend in order to build those types of
+;; document-oriented sites.
+
 (require 'ox)
 (require 'ox-publish)
 (require 'ox-ascii)
@@ -10,6 +28,8 @@
 ;; If you don't have a title, it leaves a blank # in the gmi
 ;; If you link a file to an absolute path, the links break
 
+;;; Code:
+
 (org-export-define-derived-backend 'gemini 'ascii
   :menu-entry
   '(?g "Export to Gemini"
@@ -18,26 +38,17 @@
 	      (org-gemini-export-to-buffer a s v b nil)))
 	(?f "To file"
 	    (lambda (a s v b)
-	      (org-gemini-export-to-file a s v b nil)))
-	))
-  :translate-alist '(
-		     (code . org-gemini-code-inline) 
+	      (org-gemini-export-to-file a s v b nil)))))
+  :translate-alist '((code . org-gemini-code-inline)
 		     (headline . org-gemini-headline)
 		     (link . org-gemini-link)
 		     (section . org-gemini-section)
 		     (src-block . org-gemini-code-block)
                      (item . org-gemini-item)
-		     (template . org-gemini-template)
-		     )
-  )
+		     (template . org-gemini-template)))
 
 (defun org-gemini-paragraph (paragraph contents info)
-  (progn
-    (message "we were at least called in the paragraph function")
-    paragraph))
-
-(defun org-gemini-identity (input contents info)
-  "this is a test")
+  paragraph)
 
 (defun org-gemini-item (input contents info)
   (format "* %s" contents))
@@ -52,6 +63,8 @@
 	   (org-export-format-code-default example-block info))))
 
 (defun org-gemini--describe-links (links width info)
+  "Describe links is the footer-portion of the link data. It's
+output just before each section."
   (mapconcat
    (lambda (link)
      (let* ((raw-path (org-element-property :raw-link link))
@@ -64,13 +77,16 @@
 	    (desc (org-element-contents link))
 	    (anchor (org-export-data
 		     (or desc (org-element-property :raw-link link))
-		     info))
-	    )
+		     info)))
        (format "=> %s %s\n" path anchor)))
    links ""))
 
 
 (defun org-gemini-link (link desc info)
+  "Simple link generation.
+
+Note: the footer with the actual links are handled in
+org-gemini--describe-links"
   (if (org-string-nw-p desc)
       (format "[%s]" desc)))
 
@@ -96,6 +112,7 @@ contextual information."
 	  (plist-get info :ascii-inner-margin))))))
 
 (defun org-gemini--build-title
+    "Simple title."
     (element info text-width &optional underline notags toc)
   (let ((number (org-element-property :level element))
 	(text
@@ -171,21 +188,54 @@ holding export options."
      (format "# %s\n" (org-export-data
 		       (when (plist-get info :with-title) (plist-get info :title)) info))
      ;; Document's body.
-     contents
-     )))
+     contents)))
 
 
-
-(defun org-gemini-export-as-gemini (&optional async subtreep visible-only body-only ext-plist)
-  (interactive)
-  (org-export-to-buffer 'gemini "*Org Gemini Export*" async subtreep visible-only body-only ext-plist (lambda () (text-mode))))
 
 (defun org-gemini-export-to-buffer (&optional async subtreep visible-only body-only ext-plist)
+  "Export an org file to a new buffer.
+
+A non-nil optional argument ASYNC means the process should happen
+asynchronously.  The resulting buffer should be accessible
+through the `org-export-stack' interface.
+
+When optional argument SUBTREEP is non-nil, export the sub-tree
+at point, extracting information from the headline properties
+first.
+
+When optional argument VISIBLE-ONLY is non-nil, don't export
+contents of hidden elements.
+
+When optional argument BODY-ONLY is non-nil, strip title and
+table of contents from output.
+
+EXT-PLIST, when provided, is a property list with external
+parameters overriding Org default settings, but still inferior to
+file-local settings."
   (interactive)
   (org-export-to-buffer 'gemini "*Org Gemini Export*" async subtreep visible-only body-only ext-plist (lambda () (text-mode))))
 
 
 (defun org-gemini-export-to-file (&optional async subtreep visible-only body-only ext-plist)
+  "Export an org file to a gemini file.
+
+A non-nil optional argument ASYNC means the process should happen
+asynchronously.  The resulting buffer should be accessible
+through the `org-export-stack' interface.
+
+When optional argument SUBTREEP is non-nil, export the sub-tree
+at point, extracting information from the headline properties
+first.
+
+When optional argument VISIBLE-ONLY is non-nil, don't export
+contents of hidden elements.
+
+When optional argument BODY-ONLY is non-nil, strip title and
+table of contents from output.
+
+EXT-PLIST, when provided, is a property list with external
+parameters overriding Org default settings, but still inferior to
+file-local settings."
   (interactive)
   (let ((file (org-export-output-file-name ".gmi" subtreep)))
     (org-export-to-file 'gemini file
@@ -193,7 +243,7 @@ holding export options."
 
 
 (defun org-gemini-publish-to-gemini (plist filename pub-dir)
-  "Publish an org file to a gemini file
+  "Publish an org file to a gemini file.
 
 FILENAME is the filename of the Org file to be published.  PLIST
 is the property list for the given project.  PUB-DIR is the
@@ -205,3 +255,4 @@ Return output file name."
 
 
 (provide 'ox-gemini)
+;;; ox-gemini.el ends here
