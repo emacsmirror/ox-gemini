@@ -50,23 +50,28 @@
 		     (template . org-gemini-template)))
 
 (defun org-gemini-paragraph (paragraph _contents _info)
+  "PARAGRAPH is the text of the paragraph."
   paragraph)
 
 (defun org-gemini-item (_input contents _info)
+  "CONTENTS is the text of the individual item."
   (format "* %s" contents))
 
 (defun org-gemini-code-inline (input _contents info)
+  "INPUT is either a 'src-block' or 'example-block' element.  INFO is a plist."
   ;; there's a bug here where there's a trailing space in the ``
   (format "`%s`" (org-export-format-code-default input info)))
 
 (defun org-gemini-code-block (example-block _contents info)
+  "EXAMPLE-BLOCK is a codeblock.  INFO is a plist."
   (org-remove-indentation
    (format "```\n%s```"
 	   (org-export-format-code-default example-block info))))
 
 (defun org-gemini--describe-links (links _width info)
-  "Describe links is the footer-portion of the link data. It's
-output just before each section."
+  "Describe links is the footer-portion of the link data.
+
+It's output just before each section.  LINKS is a list of each link.  INFO is a plist."
   (mapconcat
    (lambda (link)
      (let* ((raw-path (org-element-property :raw-link link))
@@ -86,6 +91,8 @@ output just before each section."
 
 (defun org-gemini-link (_link desc _info)
   "Simple link generation.
+
+DESC is the link text
 
 Note: the footer with the actual links are handled in
 org-gemini--describe-links"
@@ -115,6 +122,9 @@ contextual information."
 
 (defun org-gemini--build-title
     (element info _text-width &optional _underline _notags toc)
+    "Build a title heading.
+
+ELEMENT is an org-element.  TOC is whether to show the table of contents.  INFO is unimportant."
   (let ((number (org-element-property :level element))
 	(text
 	 (org-trim
