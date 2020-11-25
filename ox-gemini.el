@@ -27,6 +27,8 @@
 ;; There's a trailing space after inline code samples
 ;; If you don't have a title, it leaves a blank # in the gmi
 ;; If you link a file to an absolute path, the links break
+;; bare links don't work (e.g. directly linking https://google.com
+;; 
 
 ;;; Code:
 
@@ -47,13 +49,13 @@
                      (item . org-gemini-item)
 		     (template . org-gemini-template)))
 
-(defun org-gemini-paragraph (paragraph contents info)
+(defun org-gemini-paragraph (paragraph _contents _info)
   paragraph)
 
-(defun org-gemini-item (input contents info)
+(defun org-gemini-item (_input contents _info)
   (format "* %s" contents))
 
-(defun org-gemini-code-inline (input contents info)
+(defun org-gemini-code-inline (input _contents info)
   ;; there's a bug here where there's a trailing space in the ``
   (format "`%s`" (org-export-format-code-default input info)))
 
@@ -62,7 +64,7 @@
    (format "```\n%s```"
 	   (org-export-format-code-default example-block info))))
 
-(defun org-gemini--describe-links (links width info)
+(defun org-gemini--describe-links (links _width info)
   "Describe links is the footer-portion of the link data. It's
 output just before each section."
   (mapconcat
@@ -82,7 +84,7 @@ output just before each section."
    links ""))
 
 
-(defun org-gemini-link (link desc info)
+(defun org-gemini-link (_link desc _info)
   "Simple link generation.
 
 Note: the footer with the actual links are handled in
@@ -112,12 +114,12 @@ contextual information."
 	  (plist-get info :ascii-inner-margin))))))
 
 (defun org-gemini--build-title
-    (element info text-width &optional underline notags toc)
+    (element info _text-width &optional _underline _notags toc)
   (let ((number (org-element-property :level element))
 	(text
 	 (org-trim
 	  (org-export-data
-	   (if (and toc headlinep)
+	   (if toc
 	       (org-export-get-alt-title element info)
 	     (org-element-property :title element))
 	   info))))
@@ -181,13 +183,12 @@ holding contextual information."
   "Return complete document string after GEMINI conversion.
 CONTENTS is the transcoded contents string.  INFO is a plist
 holding export options."
-  (let ((global-margin (plist-get info :ascii-global-margin)))
-    (concat
-     ;; Build title block.
-     (format "# %s\n" (org-export-data
-		       (when (plist-get info :with-title) (plist-get info :title)) info))
-     ;; Document's body.
-     contents)))
+  (concat
+   ;; Build title block.
+   (format "# %s\n" (org-export-data
+                     (when (plist-get info :with-title) (plist-get info :title)) info))
+   ;; Document's body.
+   contents))
 
 
 
