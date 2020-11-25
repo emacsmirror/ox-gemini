@@ -1,11 +1,11 @@
 ;;; ox-gemini.el --- Output gemini formatted documents from org-mode  -*- lexical-binding: t; -*-
 
-
 ;; Author: Justin Abrahms <justin@abrah.ms>
 ;; URL: https://git.sr.ht/~abrahms/ox-gemini
 ;; Keywords: lisp gemini
 ;; Version: 0
 ;; Package-Requires: ((emacs "26.1"))
+;; SPDX-License-Identifier: GPL-3.0-or-later
 
 
 ;;; Commentary:
