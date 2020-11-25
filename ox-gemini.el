@@ -21,6 +21,10 @@
 (require 'ox-ascii)
 (require 'cl-lib)
 
+(eval-when-compile
+  (progn
+    (checkdoc)))
+
 
 ;; TODO:
 ;; Sublists aren't supported in gemini
