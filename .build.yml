@@ -1,0 +1,10 @@
+image: alpine/edge
+packages:
+  - emacs
+  - make
+sources:
+  - https://git.sr.ht/~abrahms/ox-gemini
+tasks:
+  - build: |
+      make update
+      make compile
