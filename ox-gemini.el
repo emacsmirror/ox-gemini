@@ -51,6 +51,7 @@
 		     (section . org-gemini-section)
 		     (src-block . org-gemini-code-block)
                      (item . org-gemini-item)
+                     (quote-block . org-gemini-quote-block)
 		     (template . org-gemini-template)))
 
 (defun org-gemini-paragraph (paragraph _contents _info)
@@ -60,6 +61,10 @@
 (defun org-gemini-item (_input contents _info)
   "CONTENTS is the text of the individual item."
   (format "* %s" contents))
+
+(defun org-gemini-quote-block (_input contents _info)
+  "CONTENTS is the text of the quote."
+   (format "> %s " contents))
 
 (defun org-gemini-code-inline (input _contents info)
   "INPUT is either a 'src-block' or 'example-block' element.  INFO is a plist."
