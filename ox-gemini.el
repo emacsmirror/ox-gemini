@@ -83,21 +83,24 @@
   "Describe links is the footer-portion of the link data.
 
 It's output just before each section.  LINKS is a list of each link.  INFO is a plist."
-  (mapconcat
-   (lambda (link)
-     (let* ((raw-path (org-element-property :raw-link link))
-            (link-type (org-element-property :type link))
-            (is-org-file-link (and (string= "file" link-type)
-                                   (string= ".org" (downcase (file-name-extension raw-path ".")))))
-            (path (if is-org-file-link
-                      (concat (file-name-sans-extension (org-element-property :path link)) ".gmi")
-                    raw-path))
-	    (desc (org-element-contents link))
-	    (anchor (org-export-data
-		     (or desc (org-element-property :raw-link link))
-		     info)))
-       (format "=> %s %s\n" path anchor)))
-   links ""))
+  (concat
+   (mapconcat
+    (lambda (link)
+      (let* ((raw-path (org-element-property :raw-link link))
+             (link-type (org-element-property :type link))
+             (is-org-file-link (and (string= "file" link-type)
+                                    (string= ".org" (downcase (file-name-extension raw-path ".")))))
+             (path (if is-org-file-link
+                       (concat (file-name-sans-extension (org-element-property :path link)) ".gmi")
+                     raw-path))
+	     (desc (org-element-contents link))
+	     (anchor (org-export-data
+		      (or desc (org-element-property :raw-link link))
+		      info)))
+        (format "=> %s %s\n" path anchor)))
+    links "")
+   (when (car links)
+     "\n")))
 
 
 (defun org-gemini-link (_link desc _info)
