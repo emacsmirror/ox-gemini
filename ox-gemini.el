@@ -46,6 +46,7 @@
 	    (lambda (a s v b)
 	      (org-gemini-export-to-file a s v b nil)))))
   :translate-alist '((code . org-gemini-code-inline)
+                     (paragraph . org-gemini-paragraph)
 		     (headline . org-gemini-headline)
 		     (link . org-gemini-link)
 		     (section . org-gemini-section)
@@ -54,9 +55,10 @@
                      (quote-block . org-gemini-quote-block)
 		     (template . org-gemini-template)))
 
-(defun org-gemini-paragraph (paragraph _contents _info)
-  "PARAGRAPH is the text of the paragraph."
-  paragraph)
+(defun org-gemini-paragraph (_paragraph contents _info)
+  "CONTENTS is the text of the paragraph."
+  (concat (string-replace "\n" " " contents)
+          "\n"))
 
 (defun org-gemini-item (_input contents _info)
   "CONTENTS is the text of the individual item."
