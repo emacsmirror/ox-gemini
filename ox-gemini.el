@@ -29,7 +29,6 @@
 ;; TODO:
 ;; Sublists aren't supported in gemini
 ;; There's a trailing space after inline code samples
-;; If you don't have a title, it leaves a blank # in the gmi
 ;; If you link a file to an absolute path, the links break
 ;; bare links don't work (e.g. directly linking https://google.com
 ;; 
@@ -207,14 +206,13 @@ holding contextual information."
   "Return complete document string after GEMINI conversion.
 CONTENTS is the transcoded contents string.  INFO is a plist
 holding export options."
-  (concat
-   ;; Build title block.
-   (format "# %s\n" (org-export-data
-                     (when (plist-get info :with-title) (plist-get info :title)) info))
-   ;; Document's body.
-   contents))
-
-
+  (let ((title (org-export-data (when (plist-get info :with-title)
+                                  (plist-get info :title))
+                                info)))
+    (concat
+     (unless (string= title "")
+       (format "# %s\n\n" title))
+     contents)))
 
 (defun org-gemini-export-to-buffer (&optional async subtreep visible-only body-only ext-plist)
   "Export an org file to a new buffer.
