@@ -25,6 +25,14 @@
   (progn
     (checkdoc)))
 
+;; backport for older emacs verisons
+(if (not (fboundp 'string-replace))
+    (progn
+      (defun string-replace (from to in)
+        (replace-regexp-in-string (regexp-quote from) to in nil 'literal))
+      (declare-function string-replace "ox-gemini")
+    ))
+
 
 ;; TODO:
 ;; Sublists aren't supported in gemini
