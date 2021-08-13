@@ -81,7 +81,7 @@ fi
 
 
 echo "Running checkdoc.."
-error_lines=`emacs -batch $user $args -l $lispfile -f checkdoc-batch-commandline "$@" | tee /dev/stderr | wc -l`
+error_lines=`emacs -batch $user $args -l $lispfile -f checkdoc-batch-commandline "$@" | tee >(cat 1>&2) | wc -l`
 
 if [ $error_lines -gt 1 ]; then
 	echo $OUTPUT
