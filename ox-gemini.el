@@ -112,7 +112,7 @@ It's output just before each section.  LINKS is a list of each link.  INFO is a 
 DESC is the link text
 
 Note: the footer with the actual links are handled in
-org-gemini--describe-links"
+`org-gemini--describe-links'."
   (if (org-string-nw-p desc)
       (format "[%s]" desc)))
 
