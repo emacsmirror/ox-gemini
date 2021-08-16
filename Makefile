@@ -9,5 +9,6 @@ clean:
 	rm -f *.elc
 
 lint:
-	./test/checkdoc-batch.sh -Q --lispdir=test ox-gemini.el
+	emacs --batch -l test/lint.el
+
 .PHONY: update compile test clean

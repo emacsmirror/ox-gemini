@@ -21,10 +21,6 @@
 (require 'ox-ascii)
 (require 'cl-lib)
 
-(eval-when-compile
-  (progn
-    (checkdoc)))
-
 ;; backport for older emacs verisons
 (if (not (fboundp 'string-replace))
     (progn
