@@ -25,8 +25,7 @@
 ;; Sublists aren't supported in gemini
 ;; There's a trailing space after inline code samples
 ;; If you link a file to an absolute path, the links break
-;; bare links don't work (e.g. directly linking https://google.com
-;; 
+;; bare links don't work (e.g. directly linking https://google.com)
 
 ;;; Code:
 
