@@ -21,15 +21,6 @@
 (require 'ox-ascii)
 (require 'cl-lib)
 
-;; backport for older emacs verisons
-(if (not (fboundp 'string-replace))
-    (progn
-      (defun string-replace (from to in)
-        (replace-regexp-in-string (regexp-quote from) to in nil 'literal))
-      (declare-function string-replace "ox-gemini")
-    ))
-
-
 ;; TODO:
 ;; Sublists aren't supported in gemini
 ;; There's a trailing space after inline code samples
@@ -60,7 +51,7 @@
 
 (defun org-gemini-paragraph (_paragraph contents _info)
   "CONTENTS is the text of the paragraph."
-  (concat (string-replace "\n" " " contents)
+  (concat (replace-regexp-in-string "\n" " " contents)
           "\n"))
 
 (defun org-gemini-item (_input contents _info)
