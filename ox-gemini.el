@@ -68,11 +68,13 @@
   ;; there's a bug here where there's a trailing space in the ``
   (format "`%s`" (org-export-format-code-default input info)))
 
-(defun org-gemini-code-block (example-block _contents info)
-  "EXAMPLE-BLOCK is a codeblock.  INFO is a plist."
-  (org-remove-indentation
-   (format "```\n%s```"
-           (org-export-format-code-default example-block info))))
+(defun org-gemini-code-block (src-block _contents info)
+  "SRC-BLOCK is a codeblock.  INFO is a plist."
+  (let ((name (org-element-property :name src-block)))
+    (org-remove-indentation
+     (format "```%s\n%s```"
+             (or name "")
+             (org-export-format-code-default src-block info)))))
 
 (defun org-gemini--describe-links (links _width info)
   "Describe links is the footer-portion of the link data.
