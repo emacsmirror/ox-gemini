@@ -20,6 +20,7 @@
 (require 'ox-publish)
 (require 'ox-ascii)
 (require 'cl-lib)
+(require 'url-util)
 
 ;; TODO:
 ;; Sublists aren't supported in gemini
@@ -94,7 +95,7 @@ It's output just before each section.  LINKS is a list of each link.  INFO is a 
              (anchor (org-export-data
                       (or desc (org-element-property :raw-link link))
                       info)))
-        (format "=> %s %s\n" path anchor)))
+        (format "=> %s %s\n" (url-encode-url path) anchor)))
     links "")
    (when (car links)
      "\n")))
