@@ -116,7 +116,9 @@ Note: the footer with the actual links are handled in
   "Transcode a SECTION element from Org to GEMINI.
 CONTENTS is the contents of the section.  INFO is a plist holding
 contextual information."
-  (let ((links
+  ;; CONTENTS is nil when the section has no text but it has properties setted.  
+  (let ((contents-str (or contents "")) ;; ensure that contents is a string.
+        (links
          (and (plist-get info :ascii-links-to-notes)
               ;; Take care of links in first section of the document.
               (not (org-element-lineage section '(headline)))
@@ -125,8 +127,8 @@ contextual information."
                (org-ascii--current-text-width section info)
                info))))
     (org-remove-indentation
-      (if (not (org-string-nw-p links)) contents
-        (concat (org-element-normalize-string contents) "\n\n" links))
+      (if (not (org-string-nw-p links)) contents-str
+        (concat (org-element-normalize-string contents-str) "\n\n" links))      
       ;; Do not apply inner margin if parent headline is low level.
       (let ((headline (org-export-get-parent-headline section)))
         (if (or (not headline) (org-export-low-level-p headline info)) 0
