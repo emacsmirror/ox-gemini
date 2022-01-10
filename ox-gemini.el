@@ -59,7 +59,9 @@
 
 (defun org-gemini-quote-block (_input contents _info)
   "CONTENTS is the text of the quote."
-   (format "> %s " contents))
+  (replace-regexp-in-string
+   "^" "> "
+   (replace-regexp-in-string "\n\\'" "" contents)))
 
 (defun org-gemini-code-inline (input _contents info)
   "INPUT is either a 'src-block' or 'example-block' element.  INFO is a plist."
