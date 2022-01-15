@@ -71,7 +71,8 @@
 
 (defun org-gemini-code-block (src-block _contents info)
   "SRC-BLOCK is a codeblock.  INFO is a plist."
-  (let ((name (org-element-property :name src-block)))
+  (let ((name (or (caaar (org-element-property :caption src-block))
+                  (org-element-property :name src-block))))
     (org-remove-indentation
      (format "```%s\n%s```"
              (or name "")
