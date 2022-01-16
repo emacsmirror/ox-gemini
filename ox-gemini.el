@@ -40,6 +40,7 @@
             (lambda (a s v b)
               (org-gemini-export-to-file a s v b nil)))))
   :translate-alist '((code . org-gemini-code-inline)
+                     (export-block . org-gemini-export-block)
                      (paragraph . org-gemini-paragraph)
                      (headline . org-gemini-headline)
                      (link . org-gemini-link)
@@ -81,7 +82,8 @@
 (defun org-gemini--describe-links (links _width info)
   "Describe links is the footer-portion of the link data.
 
-It's output just before each section.  LINKS is a list of each link.  INFO is a plist."
+It's output just before each section.  LINKS is a list of each link.
+INFO is a plist."
   (concat
    (mapconcat
     (lambda (link)
@@ -139,7 +141,8 @@ contextual information."
     (element info _text-width &optional _underline _notags toc)
     "Build a title heading.
 
-ELEMENT is an org-element.  TOC is whether to show the table of contents.  INFO is unimportant."
+ELEMENT is an org-element.  TOC is whether to show the table of contents.
+INFO is unimportant."
   (let ((number (org-element-property :level element))
         (text
          (org-trim
@@ -276,6 +279,14 @@ publishing directory.
 Return output file name."
   (org-publish-org-to
    'gemini filename ".gmi" plist pub-dir))
+
+(defun org-gemini-export-block (export-block _contents _info)
+  "Transcode a EXPORT-BLOCK element from Org to Markdown.
+CONTENTS is nil.  INFO is a plist holding contextual information."
+  (when (member (org-element-property :type export-block) '("GEMINI" "GMI"
+                                                            "GEMTEXT"))
+    (org-remove-indentation (org-element-property :value export-block))))
+
 
 
 (provide 'ox-gemini)
