@@ -39,7 +39,8 @@
         (?f "To file"
             (lambda (a s v b)
               (org-gemini-export-to-file a s v b nil)))))
-  :translate-alist '((code . org-gemini-code-inline)
+  :translate-alist '((quote-block . org-gemini-quote-block)
+                     (code . org-gemini-code-inline)
                      (export-block . org-gemini-export-block)
                      (paragraph . org-gemini-paragraph)
                      (headline . org-gemini-headline)
@@ -47,7 +48,6 @@
                      (section . org-gemini-section)
                      (src-block . org-gemini-code-block)
                      (item . org-gemini-item)
-                     (quote-block . org-gemini-quote-block)
                      (template . org-gemini-template)))
 
 (defun org-gemini-paragraph (_paragraph contents _info)
@@ -55,9 +55,16 @@
   (concat (replace-regexp-in-string "\n" " " contents)
           "\n"))
 
-(defun org-gemini-item (_input contents _info)
+(defun org-gemini-item (item contents info)
   "CONTENTS is the text of the individual item."
-  (format "* %s" contents))
+  (concat "* "
+	  (pcase (org-element-property :checkbox item)
+	    (`on "[X] ")
+	    (`trans "[-] ")
+	    (`off "[ ] "))
+	  (let ((tag (org-element-property :tag item)))
+	    (and tag (format "%s :: "(org-export-data tag info))))
+          contents))
 
 (defun org-gemini-quote-block (_input contents _info)
   "CONTENTS is the text of the quote."
@@ -283,8 +290,8 @@ Return output file name."
 (defun org-gemini-export-block (export-block _contents _info)
   "Transcode a EXPORT-BLOCK element from Org to Markdown.
 CONTENTS is nil.  INFO is a plist holding contextual information."
-  (when (member (org-element-property :type export-block) '("GEMINI" "GMI"
-                                                            "GEMTEXT"))
+  (when (member (org-element-property :type export-block)
+                '("GEMINI" "GMI" "GEMTEXT"))
     (org-remove-indentation (org-element-property :value export-block))))
 
 
