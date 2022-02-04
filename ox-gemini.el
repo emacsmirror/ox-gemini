@@ -48,7 +48,8 @@
                      (section . org-gemini-section)
                      (src-block . org-gemini-code-block)
                      (item . org-gemini-item)
-                     (template . org-gemini-template)))
+                     (template . org-gemini-template)
+                     (table . org-gemini-table)))
 
 (defun org-gemini-paragraph (_paragraph contents _info)
   "CONTENTS is the text of the paragraph."
@@ -58,12 +59,14 @@
 (defun org-gemini-item (item contents info)
   "CONTENTS is the text of the individual item."
   (concat "* "
+          ;; vv Code from ox-md! vv
 	  (pcase (org-element-property :checkbox item)
 	    (`on "[X] ")
 	    (`trans "[-] ")
 	    (`off "[ ] "))
 	  (let ((tag (org-element-property :tag item)))
-	    (and tag (format "%s :: "(org-export-data tag info))))
+	    (and tag (format "%s :: " (org-export-data tag info))))
+          ;; ^^ ^^
           contents))
 
 (defun org-gemini-quote-block (_input contents _info)
@@ -294,7 +297,13 @@ CONTENTS is nil.  INFO is a plist holding contextual information."
                 '("GEMINI" "GMI" "GEMTEXT"))
     (org-remove-indentation (org-element-property :value export-block))))
 
-
+(defun org-gemini-table (table contents info)
+  "Use the `org-ascii-table' but surrounded by backticks."
+  (let ((name (or (caaar (org-element-property :caption table))
+                  (org-element-property :name table))))
+    (concat (format "```%s\n" (or name ""))
+                    (org-ascii-table table contents info)
+                    "\n```\n")))
 
 (provide 'ox-gemini)
 ;;; ox-gemini.el ends here
