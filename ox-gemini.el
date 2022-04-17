@@ -212,8 +212,10 @@ holding contextual information."
                   (format "%c "
                           (nth (mod (1- low-level) (length bullets)) bullets))))
             (concat bullet title "\n" pre-blanks
-                    ;; Contents, indented by length of bullet.
-                    (org-ascii--indent-string body (length bullet))))
+                    ;; In Gemtext, text should not be indentend. Otherwise,
+                    ;; source code blocks, links, and other line types would not
+                    ;; be interpreted by clients because of the initial spacing.
+                    body))
         ;; Else: Standard headline.
         (concat title "\n" pre-blanks body)))))
 
