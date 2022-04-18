@@ -57,7 +57,9 @@
           "\n"))
 
 (defun org-gemini-item (item contents info)
-  "CONTENTS is the text of the individual item."
+  "Generate a Gemtext item from the org CONTENTS.
+CONTENTS is the text of the individual item.
+ITEM is the parsed-org element with all properties."
   (concat "* "
           ;; vv Code from ox-md! vv
 	  (pcase (org-element-property :checkbox item)
@@ -76,7 +78,8 @@
    (replace-regexp-in-string "\n\\'" "" contents)))
 
 (defun org-gemini-code-inline (input _contents info)
-  "INPUT is either a 'src-block' or 'example-block' element.  INFO is a plist."
+  "Generate an inline code in Gemtext from the parsed INPUT.
+INPUT is either a 'src-block' or 'example-block' element.  INFO is a plist."
   ;; there's a bug here where there's a trailing space in the ``
   (format "`%s`" (org-export-format-code-default input info)))
 
@@ -300,12 +303,16 @@ CONTENTS is nil.  INFO is a plist holding contextual information."
     (org-remove-indentation (org-element-property :value export-block))))
 
 (defun org-gemini-table (table contents info)
-  "Use the `org-ascii-table' but surrounded by backticks."
+  "Generate a Gemtext table from the parsed Org.
+Use the `org-ascii-table' but surrounded by backticks.
+Parameters: TABLE is the parsed org-element table.  CONTENTS is the text with
+properties.  INFO is a plist with export options."
   (let ((name (or (caaar (org-element-property :caption table))
                   (org-element-property :name table))))
-    (concat (format "```%s\n" (or name ""))
-                    (org-ascii-table table contents info)
-                    "\n```\n")))
+    (format "```%s\n%s\n```\n"
+            (or name "")
+            (org-ascii-table table contents info))))
+
 
 (provide 'ox-gemini)
 ;;; ox-gemini.el ends here
