@@ -79,7 +79,8 @@ ITEM is the parsed-org element with all properties."
 
 (defun org-gemini-code-inline (input _contents info)
   "Generate an inline code in Gemtext from the parsed INPUT.
-INPUT is either a 'src-block' or 'example-block' element.  INFO is a plist."
+INPUT is either a '\\=src-block\\=' or '\\=example-block\\='
+element.  INFO is a plist."
   ;; there's a bug here where there's a trailing space in the ``
   (format "`%s`" (org-export-format-code-default input info)))
 
@@ -108,9 +109,10 @@ INFO is a plist."
                        (concat (file-name-sans-extension (org-element-property :path link)) ".gmi")
                      raw-path))
              (desc (org-element-contents link))
-             (anchor (org-export-data
-                      (or desc (org-element-property :raw-link link))
-                      info)))
+             (anchor (string-replace "\n" " "
+                                     (org-export-data
+                                      (or desc (org-element-property :raw-link link))
+                                      info))))
         (format "=> %s %s\n" (url-encode-url path) anchor)))
     links "")
    (when (car links)
