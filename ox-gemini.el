@@ -113,21 +113,23 @@ INFO is a plist."
                                      (org-export-data
                                       (or desc (org-element-property :raw-link link))
                                       info))))
-        (format "=> %s %s\n" (url-encode-url path) anchor)))
+        (format "=> %s\^I%s\n" (url-encode-url path) (or anchor path))))
     links "")
    (when (car links)
      "\n")))
 
 
-(defun org-gemini-link (_link desc _info)
+(defun org-gemini-link (link desc _info)
   "Simple link generation.
 
+LINK is the url itself
 DESC is the link text
 
 Note: the footer with the actual links are handled in
 `org-gemini--describe-links'."
   (if (org-string-nw-p desc)
-      (format "[%s]" desc)))
+      (format "[%s]" desc)
+      (format "[%s]" (org-element-property :raw-link link))))
 
 
 (defun org-gemini-section (section contents info)

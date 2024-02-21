@@ -1,6 +1,6 @@
 image: alpine/edge
 packages:
-  - emacs
+  - emacs-nox
   - make
 sources:
   - https://git.sr.ht/~abrahms/ox-gemini
